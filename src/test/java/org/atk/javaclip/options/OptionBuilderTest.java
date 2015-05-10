@@ -65,7 +65,6 @@ public class OptionBuilderTest {
     @Test
     public void testFlagged() {
         Option opt = dummyFlagged().build();
-        assertTrue(opt instanceof Flagged);
         assertTrue(opt.isFlagged());
         assertFalse(opt.isIndexedLeft());
         assertFalse(opt.isIndexedRight());
@@ -74,8 +73,6 @@ public class OptionBuilderTest {
     @Test
     public void testIndexedLeft() {
         Option opt = dummyIndexedLeft().build();
-        assertTrue(opt instanceof Indexed);
-        assertEquals(Indexed.Position.Left, ((Indexed) opt).getPosition());
         assertTrue(opt.isIndexedLeft());
         assertFalse(opt.isFlagged());
         assertFalse(opt.isIndexedRight());
@@ -84,8 +81,6 @@ public class OptionBuilderTest {
     @Test
     public void testIndexedRight() {
         Option opt = dummyIndexedRight().build();
-        assertTrue(opt instanceof Indexed);
-        assertEquals(Indexed.Position.Right, ((Indexed) opt).getPosition());
         assertTrue(opt.isIndexedRight());
         assertFalse(opt.isIndexedLeft());
         assertFalse(opt.isFlagged());
@@ -108,21 +103,21 @@ public class OptionBuilderTest {
     @Test
     public void testFlagProperlySet() {
         final String flag = "--bj-is-da-bess";
-        Flagged flagged = (Flagged) dummyFlagged(flag).build();
+        Option flagged = dummyFlagged(flag).build();
         assertEquals(flag, flagged.getFlag());
     }
 
     @Test
     public void testLeftIndexProperlySet() {
         final int index = new Random().nextInt(Integer.MAX_VALUE);
-        Indexed indexed = (Indexed) dummyIndexedLeft(index).build();
+        Option indexed = dummyIndexedLeft(index).build();
         assertEquals(index, indexed.getIndex());
     }
 
     @Test
     public void testRightIndexProperlySet() {
         final int index = new Random().nextInt(Integer.MAX_VALUE);
-        Indexed indexed = (Indexed) dummyIndexedRight(index).build();
+        Option indexed = dummyIndexedRight(index).build();
         assertEquals(index, indexed.getIndex());
     }
 

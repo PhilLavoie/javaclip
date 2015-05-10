@@ -177,19 +177,16 @@ public class OptionBuilder {
     public Option build() {
         switch (type) {
             case Flagged:
-                return new Flagged(flag, description, parser, argumentName, convertPresenceFor(presence, type));
+                return new Option(description, parser, argumentName,
+                        convertPresenceAndUseDefaultIfNotSet(presence, type), Option.Type.Flagged, flag, 0);
             case IndexedLeft:
-                if (!argumentParserProvided) {
-                    throw new IllegalStateException("indexed argument require a parser and none was provided");
-                }
-                return new Indexed(Indexed.Position.Left, index, description, parser,
-                        argumentName, convertPresenceFor(presence, type));
             case IndexedRight:
                 if (!argumentParserProvided) {
-                    throw new IllegalStateException("indexed argument require a parser and none was provided");
+                        throw new IllegalStateException("indexed argument require a parser and none was provided");
                 }
-                return new Indexed(Indexed.Position.Right, index, description, parser,
-                        argumentName, convertPresenceFor(presence, type));
+
+                return new Option(description, parser, argumentName,
+                        convertPresenceAndUseDefaultIfNotSet(presence, type), convertType(this.type), null, index);
             case UndefinedYet:
                 throw new IllegalStateException("must set either a flag or an index");
             default:
@@ -199,7 +196,21 @@ public class OptionBuilder {
         return null;
     }
 
-    private Option.Presence convertPresenceFor(Presence presence, Type type) {
+    private Option.Type convertType(Type type) {
+        switch (type) {
+            case Flagged:
+                return Option.Type.Flagged;
+            case IndexedLeft:
+                return Option.Type.IndexedLeft;
+            case IndexedRight:
+                return Option.Type.IndexedRight;
+            default:
+                assert false;
+        }
+        return null;
+    }
+
+    private Option.Presence convertPresenceAndUseDefaultIfNotSet(Presence presence, Type type) {
        switch (presence) {
            case Mandatory:
                return Option.Presence.Mandatory;
