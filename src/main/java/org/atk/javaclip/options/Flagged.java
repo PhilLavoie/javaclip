@@ -2,9 +2,6 @@ package org.atk.javaclip.options;
 
 import org.atk.javaclip.ArgumentParser;
 
-/**
- * Created by root on 5/9/15.
- */
 public class Flagged extends Option {
     protected String flag;
 
@@ -16,5 +13,21 @@ public class Flagged extends Option {
 
     protected String getFlag() {
         return this.flag;
+    }
+
+
+    @Override
+    public boolean isIndexedLeft() {
+        return false;
+    }
+
+    @Override
+    public boolean isIndexedRight() {
+        return false;
+    }
+
+    @Override
+    public boolean isFlagged() {
+        return true;
     }
 }

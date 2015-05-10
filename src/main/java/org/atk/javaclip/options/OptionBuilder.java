@@ -2,9 +2,6 @@ package org.atk.javaclip.options;
 
 import org.atk.javaclip.ArgumentParser;
 
-/**
- * Created by root on 5/9/15.
- */
 public class OptionBuilder {
 
     enum Type {

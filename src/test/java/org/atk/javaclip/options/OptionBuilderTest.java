@@ -9,9 +9,6 @@ import static org.junit.Assert.*;
 import static org.atk.javaclip.options.OptionBuilder.*;
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by root on 5/10/15.
- */
 public class OptionBuilderTest {
 
     private OptionBuilder dummyFlagged() {
@@ -69,6 +66,9 @@ public class OptionBuilderTest {
     public void testFlagged() {
         Option opt = dummyFlagged().build();
         assertTrue(opt instanceof Flagged);
+        assertTrue(opt.isFlagged());
+        assertFalse(opt.isIndexedLeft());
+        assertFalse(opt.isIndexedRight());
     }
 
     @Test
@@ -76,12 +76,19 @@ public class OptionBuilderTest {
         Option opt = dummyIndexedLeft().build();
         assertTrue(opt instanceof Indexed);
         assertEquals(Indexed.Position.Left, ((Indexed) opt).getPosition());
+        assertTrue(opt.isIndexedLeft());
+        assertFalse(opt.isFlagged());
+        assertFalse(opt.isIndexedRight());
     }
+
     @Test
     public void testIndexedRight() {
         Option opt = dummyIndexedRight().build();
         assertTrue(opt instanceof Indexed);
         assertEquals(Indexed.Position.Right, ((Indexed) opt).getPosition());
+        assertTrue(opt.isIndexedRight());
+        assertFalse(opt.isIndexedLeft());
+        assertFalse(opt.isFlagged());
     }
 
     @Test

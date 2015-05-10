@@ -2,14 +2,16 @@ package org.atk.javaclip.options;
 
 import org.atk.javaclip.ArgumentParser;
 
-/**
- * Created by root on 5/9/15.
- */
 public abstract class Option {
 
     protected String description;
     protected ArgumentParser parser;
     protected String argumentName;
+
+    public abstract boolean isIndexedLeft();
+    public abstract boolean isIndexedRight();
+    public abstract boolean isFlagged();
+    
     protected enum Presence {
         Optional,
         Mandatory

@@ -2,9 +2,6 @@ package org.atk.javaclip.options;
 
 import org.atk.javaclip.ArgumentParser;
 
-/**
- * Created by root on 5/9/15.
- */
 public class Indexed extends Option {
 
     protected int index;
@@ -29,5 +26,20 @@ public class Indexed extends Option {
 
     protected Position getPosition() {
         return this.position;
+    }
+
+    @Override
+    public boolean isIndexedLeft() {
+        return this.position == Position.Left;
+    }
+
+    @Override
+    public boolean isIndexedRight() {
+        return this.position == Position.Right;
+    }
+
+    @Override
+    public boolean isFlagged() {
+        return false;
     }
 }

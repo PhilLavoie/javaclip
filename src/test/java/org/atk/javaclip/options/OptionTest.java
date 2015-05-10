@@ -5,9 +5,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by root on 5/9/15.
- */
 public class OptionTest {
 
     @Test
@@ -21,12 +18,27 @@ public class OptionTest {
         final String argumentName = "<TOTO>";
         final Option.Presence presence = Option.Presence.Mandatory;
 
-        Option mock = new Option(description, parser, argumentName, presence) {};
+        Option opt = new Option(description, parser, argumentName, presence) {
+            @Override
+            public boolean isIndexedLeft() {
+                return false;
+            }
 
-        assertSame(description, mock.getDescription());
-        assertSame(parser, mock.getParser());
-        assertSame(argumentName, mock.getArgumentName());
-        assertSame(presence, mock.getPresence());
+            @Override
+            public boolean isIndexedRight() {
+                return false;
+            }
+
+            @Override
+            public boolean isFlagged() {
+                return false;
+            }
+        };
+
+        assertSame(description, opt.getDescription());
+        assertSame(parser, opt.getParser());
+        assertSame(argumentName, opt.getArgumentName());
+        assertSame(presence, opt.getPresence());
     }
 
 }
