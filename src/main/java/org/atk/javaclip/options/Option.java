@@ -1,6 +1,6 @@
 package org.atk.javaclip.options;
 
-import org.atk.javaclip.ArgumentParser;
+import org.atk.javaclip.parsers.ArgumentParser;
 
 public class Option {
 
@@ -21,7 +21,8 @@ public class Option {
     protected enum Type {
         Flagged,
         IndexedLeft,
-        IndexedRight
+        IndexedRight,
+        Floating
     }
 
     protected Type type;

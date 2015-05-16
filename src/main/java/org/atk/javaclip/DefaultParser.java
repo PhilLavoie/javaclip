@@ -35,6 +35,14 @@ public class DefaultParser implements Parser {
             }
         }
 
+        ArrayList<String> unparsedTokens = new ArrayList<>();
+
+        //Parse indexed left first.
+
+        //Go for the flags after.
+
+        //Parse indexed right after.
+
         return null;
     }
 }

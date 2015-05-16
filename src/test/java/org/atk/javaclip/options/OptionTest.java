@@ -1,6 +1,6 @@
 package org.atk.javaclip.options;
 
-import org.atk.javaclip.ArgumentParser;
+import org.atk.javaclip.parsers.ArgumentParser;
 import org.atk.javaclip.options.Option.*;
 
 import org.junit.Test;

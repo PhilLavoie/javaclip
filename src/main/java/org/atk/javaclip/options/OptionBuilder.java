@@ -1,15 +1,29 @@
 package org.atk.javaclip.options;
 
-import org.atk.javaclip.ArgumentParser;
+import org.atk.javaclip.parsers.ArgumentParser;
+
+import java.util.HashMap;
 
 public class OptionBuilder {
 
     enum Type {
-        Flagged,
-        IndexedLeft,
-        IndexedRight,
-        UndefinedYet;
+        Flagged("flagged"),
+        IndexedLeft("indexed left"),
+        IndexedRight("indexed right"),
+        Floating("floating"),
+        UndefinedYet("undefined");
+
+        private String pretty;
+
+        Type(String prettyString) {
+            this.pretty = prettyString;
+        }
+
+        public String getPrettyString() {
+            return this.pretty;
+        }
     }
+
     private Type type = Type.UndefinedYet;
 
     private String flag;
@@ -37,20 +51,9 @@ public class OptionBuilder {
 
     public OptionBuilder flaggedWith(String flag) {
         checkFlag(flag);
-
-        switch (type) {
-            case Flagged:
-                throw new IllegalStateException("already provided a flag: " + flag);
-            case IndexedLeft:
-            case IndexedRight:
-                throw new IllegalStateException("cannot flag an indexed argument!");
-            case UndefinedYet:
-                type = Type.Flagged;
-                this.flag = flag;
-                break;
-            default:
-                assert false : "unexpected type: " + type;
-        }
+        checkType(this.type, Type.Flagged);
+        this.type = Type.Flagged;
+        this.flag = flag;
         return this;
     }
 
@@ -62,39 +65,17 @@ public class OptionBuilder {
 
     public OptionBuilder indexedLeftAt(int index) {
         checkIndex(index);
-
-        switch (type) {
-            case Flagged:
-                throw new IllegalStateException("cannot index a flagged argument!");
-            case IndexedLeft:
-            case IndexedRight:
-                throw new IllegalStateException("already provided an index: " + index);
-            case UndefinedYet:
-                type = Type.IndexedLeft;
-                this.index = index;
-                break;
-            default:
-                assert false : "unexpected type: " + type;
-        }
+        checkType(this.type, Type.IndexedLeft);
+        this.type = Type.IndexedLeft;
+        this.index = index;
         return this;
     }
 
     public OptionBuilder indexedRightAt(int index) {
         checkIndex(index);
-
-        switch (type) {
-            case Flagged:
-                throw new IllegalStateException("cannot index a flagged argument!");
-            case IndexedLeft:
-            case IndexedRight:
-                throw new IllegalStateException("already provided an index: " + index);
-            case UndefinedYet:
-                type = Type.IndexedRight;
-                this.index = index;
-                break;
-            default:
-                assert false : "unexpected type: " + type;
-        }
+        checkType(this.type, Type.IndexedRight);
+        this.type = Type.IndexedRight;
+        this.index = index;
         return this;
     }
 
@@ -102,6 +83,26 @@ public class OptionBuilder {
         if (index < 0) {
             throw new IllegalArgumentException("invalid index: " + index + ", the provided value must be above 0");
         }
+    }
+
+    public OptionBuilder floating() {
+        checkType(this.type, Type.Floating);
+        this.type = Type.Floating;
+        return this;
+    }
+
+    private static void checkType(Type current, Type incoming) {
+        if (current != Type.UndefinedYet) {
+            throw new RuntimeException(getInvalidTypeMessage(current, incoming));
+        }
+    }
+
+    private static String getInvalidTypeMessage(Type current, Type incoming) {
+        assert current != Type.UndefinedYet;
+
+        return "type already set... trying to change from "
+                + current.getPrettyString() + " to "
+                + incoming.getPrettyString();
     }
 
     public OptionBuilder withDescription(String description) {
@@ -181,8 +182,9 @@ public class OptionBuilder {
                         convertPresenceAndUseDefaultIfNotSet(presence, type), Option.Type.Flagged, flag, 0);
             case IndexedLeft:
             case IndexedRight:
+            case Floating:
                 if (!argumentParserProvided) {
-                        throw new IllegalStateException("indexed argument require a parser and none was provided");
+                    throw new IllegalStateException(this.type.getPrettyString() + " option require an argument parser");
                 }
 
                 return new Option(description, parser, argumentName,
@@ -204,6 +206,8 @@ public class OptionBuilder {
                 return Option.Type.IndexedLeft;
             case IndexedRight:
                 return Option.Type.IndexedRight;
+            case Floating:
+                return Option.Type.Floating;
             default:
                 assert false;
         }
